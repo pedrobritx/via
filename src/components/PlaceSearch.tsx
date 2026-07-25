@@ -70,7 +70,10 @@ export function PlaceSearch({
       } finally {
         setLoading(false);
       }
-    }, 250);
+      // 600 ms, não 250: cada busca pode virar uma consulta ao Nominatim, cuja
+      // política pede no máximo uma requisição por segundo. Digitar não deve
+      // gerar uma chamada por tecla contra infraestrutura mantida por doação.
+    }, 600);
 
     return () => {
       clearTimeout(timer);
@@ -129,6 +132,16 @@ export function PlaceSearch({
           <span className="text-sm">
             <span className="sr-only">{t("form.selected")}: </span>
             {value.label}
+            {/*
+              De onde veio este lugar. Mesma disciplina das constantes: um dado
+              sem procedência não é auditável — e aqui a procedência muda a
+              precisão do cálculo inteiro.
+            */}
+            {value.source ? (
+              <span className="mt-0.5 block text-xs text-muted">
+                {t(`form.source.${value.source}` as MessageKey)}
+              </span>
+            ) : null}
           </span>
           <button
             type="button"

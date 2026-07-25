@@ -21,14 +21,19 @@ export const ptBR = {
   // --- Formulário ---
   "form.title": "Descreva o deslocamento",
   "form.origin.label": "De onde a pessoa sai",
-  "form.origin.placeholder": "Cidade, hospital ou coordenadas",
+  "form.origin.placeholder": "CEP, endereço, cidade ou hospital",
   "form.origin.help":
-    "Digite o nome de uma cidade ou equipamento de saúde, ou cole coordenadas no formato -23.5505, -46.6333.",
+    "Aceita CEP (01310-100), endereço completo, cidade ou nome de hospital. Também aceita coordenadas coladas, no formato -23.5505, -46.6333.",
   "form.destination.label": "Para onde vai",
-  "form.destination.placeholder": "Hospital ou unidade de saúde",
+  "form.destination.placeholder": "CEP, endereço ou nome da unidade",
   "form.searching": "Buscando…",
-  "form.noResults": "Nenhum lugar encontrado. Tente outro termo ou use coordenadas.",
+  "form.noResults":
+    "Nenhum lugar encontrado. Tente o CEP, um endereço mais completo, ou cole as coordenadas.",
   "form.selected": "Selecionado",
+  "form.source.nominatim": "endereço via OpenStreetMap",
+  "form.source.brasilapi-cep": "CEP via BrasilAPI",
+  "form.source.offline-fixtures": "da lista interna",
+  "form.source.coordenadas": "coordenadas informadas",
   "form.clear": "Limpar",
 
   "form.modal.label": "Como se desloca",

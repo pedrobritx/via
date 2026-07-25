@@ -19,6 +19,13 @@ export interface LatLng {
 export interface Place extends LatLng {
   /** Rótulo legível: "Hospital das Clínicas, São Paulo". */
   label: string;
+  /**
+   * Qual provedor resolveu este lugar: `nominatim`, `brasilapi-cep`,
+   * `offline-fixtures` ou `coordenadas`. A interface exibe essa origem pelo
+   * mesmo motivo que exibe a fonte de cada constante — um dado sem procedência
+   * não é auditável.
+   */
+  source?: string;
 }
 
 // ---------------------------------------------------------------------------

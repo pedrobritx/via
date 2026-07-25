@@ -4,16 +4,16 @@ import { haversineKm } from "../geo";
 import { MODAL_DETOUR_FACTOR, MODAL_SPEED_KMH } from "../parameters";
 import { TRANSPORT_MODALS } from "../types";
 import {
+  COMPOSITE_GEOCODE_PROVIDER_ID,
   createGeocodeProvider,
   createRouteProvider,
   describeProviders,
 } from "./index";
-import { createNominatimGeocodeProvider } from "./nominatimGeocode";
 import {
-  OFFLINE_GEOCODE_PROVIDER_ID,
-  parseLatLng,
-  searchFixtures,
-} from "./offlineGeocode";
+  DEFAULT_USER_AGENT,
+  createNominatimGeocodeProvider,
+} from "./nominatimGeocode";
+import { parseLatLng, searchFixtures } from "./offlineGeocode";
 import {
   OFFLINE_ROUTE_PROVIDER_ID,
   estimateOfflineRoute,
@@ -237,31 +237,38 @@ describe("fábrica de provedores", () => {
     expect(provider.id).toBe(OFFLINE_ROUTE_PROVIDER_ID);
   });
 
-  it("geocodificação padrão é offline", () => {
-    expect(createGeocodeProvider({}).id).toBe(OFFLINE_GEOCODE_PROVIDER_ID);
+  // A geocodificação padrão deixou de ser offline. O motivo está documentado
+  // em nominatimGeocode.ts: exigir configuração para buscar endereço fazia o
+  // app responder "nenhum lugar encontrado" para qualquer entrada real.
+  it("geocodificação padrão resolve endereços de verdade, sem exigir chave", () => {
+    expect(createGeocodeProvider({}).id).toBe(COMPOSITE_GEOCODE_PROVIDER_ID);
   });
 
-  it("Nominatim sem User-Agent cai para offline em vez de abusar do serviço", () => {
-    const provider = createGeocodeProvider({
-      VIA_GEOCODE_PROVIDER: "nominatim",
-    });
-    expect(provider.id).toBe(OFFLINE_GEOCODE_PROVIDER_ID);
+  it("VIA_GEOCODE_PROVIDER=offline força o modo sem rede", () => {
+    const provider = createGeocodeProvider({ VIA_GEOCODE_PROVIDER: "offline" });
+    expect(provider.id).toBe(COMPOSITE_GEOCODE_PROVIDER_ID);
+    expect(describeProviders({ VIA_GEOCODE_PROVIDER: "offline" }).geocodeIsOffline).toBe(
+      true,
+    );
   });
 
-  it("Nominatim com User-Agent é selecionado", () => {
-    const provider = createGeocodeProvider({
-      VIA_GEOCODE_PROVIDER: "nominatim",
+  it("aceita User-Agent próprio sem deixar de funcionar quando ele falta", () => {
+    const semUA = createGeocodeProvider({});
+    const comUA = createGeocodeProvider({
       VIA_NOMINATIM_USER_AGENT: "via-test/1.0 (contato@exemplo.org)",
     });
-    expect(provider.id).toBe("nominatim");
+    // Os dois funcionam: o User-Agent é uma cortesia configurável, não um
+    // portão que derruba a busca.
+    expect(semUA.id).toBe(COMPOSITE_GEOCODE_PROVIDER_ID);
+    expect(comUA.id).toBe(COMPOSITE_GEOCODE_PROVIDER_ID);
   });
 
   it("descreve a configuração ativa", () => {
     expect(describeProviders({})).toEqual({
       route: OFFLINE_ROUTE_PROVIDER_ID,
-      geocode: OFFLINE_GEOCODE_PROVIDER_ID,
+      geocode: COMPOSITE_GEOCODE_PROVIDER_ID,
       routeIsOffline: true,
-      geocodeIsOffline: true,
+      geocodeIsOffline: false,
     });
   });
 });
@@ -358,8 +365,65 @@ describe("adaptador do Nominatim", () => {
     expect(places[0].label).toBe("Válido");
   });
 
-  it("exige User-Agent, conforme a política de uso do serviço", () => {
-    expect(() => createNominatimGeocodeProvider({ userAgent: "" })).toThrow();
+  it("usa um User-Agent identificável mesmo sem configuração", async () => {
+    const fetchImpl = vi.fn(
+      async () => ({ ok: true, status: 200, json: async () => [] }) as Response,
+    );
+    const provider = createNominatimGeocodeProvider({
+      fetchImpl: fetchImpl as unknown as typeof fetch,
+    });
+
+    await provider.search("qualquer coisa");
+
+    const [, init] = fetchImpl.mock.calls[0] as unknown as [string, RequestInit];
+    const ua = (init.headers as Record<string, string>)["User-Agent"];
+    // A política do Nominatim pede identificação da aplicação — e é isso que o
+    // padrão entrega. O que ela proíbe é uso anônimo, não uso sem env var.
+    expect(ua).toBe(DEFAULT_USER_AGENT);
+    expect(ua).toMatch(/via/i);
+    expect(ua).toMatch(/https?:\/\//);
+  });
+
+  it("não repete a requisição para a mesma busca (cache)", async () => {
+    const fetchImpl = vi.fn(
+      async () =>
+        ({
+          ok: true,
+          status: 200,
+          json: async () => [
+            { lat: "-23.5", lon: "-46.6", display_name: "Um lugar" },
+          ],
+        }) as Response,
+    );
+    const provider = createNominatimGeocodeProvider({
+      fetchImpl: fetchImpl as unknown as typeof fetch,
+    });
+
+    await provider.search("Avenida Paulista");
+    await provider.search("avenida paulista");
+
+    // Digitar não pode virar uma consulta por tecla contra infraestrutura
+    // mantida por doação.
+    expect(fetchImpl).toHaveBeenCalledTimes(1);
+  });
+
+  it("marca a origem do resultado", async () => {
+    const fetchImpl = vi.fn(
+      async () =>
+        ({
+          ok: true,
+          status: 200,
+          json: async () => [
+            { lat: "-23.5", lon: "-46.6", display_name: "Um lugar" },
+          ],
+        }) as Response,
+    );
+    const provider = createNominatimGeocodeProvider({
+      fetchImpl: fetchImpl as unknown as typeof fetch,
+    });
+
+    const [place] = await provider.search("Um lugar qualquer");
+    expect(place.source).toBe("nominatim");
   });
 
   it("não chama o serviço para busca vazia", async () => {

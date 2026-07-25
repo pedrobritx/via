@@ -67,6 +67,58 @@ número.
 
 ---
 
+## `GET /api/geocode`
+
+Resolve um texto em lugares com coordenadas. É o que alimenta os campos de
+origem e destino.
+
+| Parâmetro | Descrição |
+| --- | --- |
+| `q` | CEP, endereço, cidade, nome de estabelecimento ou coordenadas coladas |
+
+A resolução segue uma ordem, porque cada tipo de entrada tem um caminho certo:
+
+1. **Coordenadas coladas** (`-23.55, -46.63`) — imediato, sem rede.
+2. **CEP** — a BrasilAPI devolve o endereço; o Nominatim converte esse endereço
+   em coordenadas. São duas chamadas porque nenhuma das duas faz o trabalho
+   inteiro: **a BrasilAPI não retorna coordenadas** (o campo `location` vem
+   vazio), e o Nominatim erra bastante quando recebe só oito dígitos.
+3. **Texto livre** — Nominatim, restrito ao Brasil.
+4. **Lista interna** — 27 hospitais e cidades de referência, sempre consultados,
+   e usados sozinhos se a rede falhar.
+
+Nenhum passo exige chave de API.
+
+```bash
+curl -s "http://localhost:3000/api/geocode?q=01310-100"
+```
+
+```json
+{
+  "places": [
+    {
+      "lat": -23.561817,
+      "lng": -46.6559323,
+      "label": "Avenida Paulista, Bela Vista, São Paulo - SP (CEP 01310-100)",
+      "source": "brasilapi-cep"
+    }
+  ],
+  "providerId": "composite-br"
+}
+```
+
+O campo `source` diz qual provedor resolveu o lugar — `coordenadas`,
+`brasilapi-cep`, `nominatim` ou `offline-fixtures`. Ele existe pelo mesmo motivo
+que cada constante tem `sourceId`: um dado sem procedência não é auditável, e
+aqui a procedência muda a precisão de todo o cálculo que vem depois.
+
+**Limite de taxa.** A instância pública do Nominatim permite uma requisição por
+segundo. O servidor serializa as chamadas e mantém cache de 24 h, e a interface
+espera 600 ms de pausa na digitação antes de buscar. Para volume de produção,
+aponte `VIA_NOMINATIM_BASE_URL` para uma instância própria.
+
+---
+
 ## `GET /api/route-estimate`
 
 Distância e tempo de um trajeto de ida.

@@ -67,8 +67,43 @@ disso, exigiria o banco que o [ADR 0001](0001-app-next-unico.md) decidiu não te
 
 ## Nota sobre o Nominatim
 
-O adaptador exige `VIA_NOMINATIM_USER_AGENT` explicitamente, em vez de inventar
-um cabeçalho. A política de uso da instância pública pede identificação e limita
-a uma requisição por segundo; usá-la anonimamente e em volume é abusar de
-infraestrutura mantida por doação. Sem o User-Agent configurado, a fábrica cai
-para o provedor offline em vez de fazer a requisição.
+> **Revisado em 2026-07-25.** A decisão original está preservada abaixo, seguida
+> do que a mudou. Um ADR que se reescreve para parecer sempre certo perde a
+> função.
+
+**Decisão original.** O adaptador exigia `VIA_NOMINATIM_USER_AGENT`
+explicitamente, em vez de inventar um cabeçalho. A política de uso da instância
+pública pede identificação e limita a uma requisição por segundo; usá-la
+anonimamente e em volume é abusar de infraestrutura mantida por doação. Sem o
+User-Agent configurado, a fábrica caía para o provedor offline.
+
+**O que aconteceu.** Ninguém configurou a variável — nem no deploy. O provedor
+offline tem 27 lugares fixos, então qualquer endereço digitado por uma pessoa
+real devolvia "nenhum lugar encontrado". A cautela protegeu o Nominatim de um
+tráfego que nunca existiu, e quebrou o produto para todo mundo. O campo de
+origem e destino simplesmente não funcionava, e isso não apareceu nos testes
+porque os testes usavam as próprias fixtures.
+
+**Decisão revisada.** A geocodificação real passa a ser o padrão, sem exigir
+configuração:
+
+- **User-Agent identificável fixo** (`via-visualizador-impacto-assistencial/0.1
+  (+repositório)`). A política pede que a aplicação se identifique — e um
+  cabeçalho honesto e constante faz exatamente isso. O que ela proíbe é uso
+  anônimo, não uso sem variável de ambiente. A variável continua existindo para
+  sobrescrever.
+- **Uma requisição por segundo**, serializada em código, com cache em memória de
+  24 h para que digitar não gere uma consulta por tecla. O debounce da interface
+  subiu de 250 ms para 600 ms pelo mesmo motivo.
+- **CEP entra pela BrasilAPI**, que não tem limite de taxa nem exige cadastro, e
+  reduz a carga sobre o Nominatim para os casos brasileiros mais comuns.
+
+**Ressalva honesta sobre o limitador.** Em ambiente serverless cada instância
+tem sua própria fila, então 1 req/s não é uma garantia global — é uma redução
+substancial de rajadas. A garantia real exige `VIA_NOMINATIM_BASE_URL` apontando
+para instância própria, e o `.env.example` diz isso.
+
+**A lição.** A decisão original tratava um risco hipotético (abusar do
+Nominatim) como mais grave que uma falha certa (o produto não funcionar). Uma
+salvaguarda que desliga a funcionalidade principal por padrão não é cautela — é
+um defeito com boa justificativa.

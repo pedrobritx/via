@@ -12,18 +12,17 @@
  */
 
 import type { GeocodeProvider, RouteProvider } from "../types";
-import {
-  OFFLINE_GEOCODE_PROVIDER_ID,
-  offlineGeocodeProvider,
-} from "./offlineGeocode";
+import { OFFLINE_GEOCODE_PROVIDER_ID } from "./offlineGeocode";
 import {
   OFFLINE_ROUTE_PROVIDER_ID,
   estimateOfflineRoute,
   offlineRouteProvider,
 } from "./offlineRoute";
 import { createOrsRouteProvider } from "./orsRoute";
-import { createNominatimGeocodeProvider } from "./nominatimGeocode";
+import { createCompositeGeocodeProvider } from "./compositeGeocode";
 
+export * from "./brasilApiCep";
+export * from "./compositeGeocode";
 export * from "./offlineGeocode";
 export * from "./offlineRoute";
 export * from "./nominatimGeocode";
@@ -40,6 +39,7 @@ export interface ProviderEnv {
   VIA_ORS_BASE_URL?: string;
   VIA_GEOCODE_PROVIDER?: string;
   VIA_NOMINATIM_USER_AGENT?: string;
+  VIA_NOMINATIM_BASE_URL?: string;
   [key: string]: string | undefined;
 }
 
@@ -88,19 +88,35 @@ export function createRouteProvider(env: ProviderEnv = process.env): RouteProvid
   }
 }
 
+/**
+ * Geocodificação: CEP e endereço reais por padrão.
+ *
+ * O padrão anterior eram as fixtures offline, e o resultado prático era que
+ * qualquer endereço digitado por uma pessoa real devolvia "nenhum lugar
+ * encontrado" — 27 lugares fixos não são um geocodificador. Agora o padrão é o
+ * provedor composto, que resolve CEP e texto livre sem exigir chave nenhuma.
+ *
+ * `VIA_GEOCODE_PROVIDER=offline` força o modo sem rede, para testes e para
+ * ambientes isolados.
+ */
 export function createGeocodeProvider(
   env: ProviderEnv = process.env,
 ): GeocodeProvider {
   const choice = env.VIA_GEOCODE_PROVIDER?.trim().toLowerCase();
-  if (choice !== "nominatim") return offlineGeocodeProvider;
 
-  const userAgent = env.VIA_NOMINATIM_USER_AGENT?.trim();
-  if (!userAgent) return offlineGeocodeProvider;
+  if (choice === "offline") {
+    return createCompositeGeocodeProvider({ offlineOnly: true });
+  }
 
   try {
-    return createNominatimGeocodeProvider({ userAgent, countryCodes: "br" });
+    return createCompositeGeocodeProvider({
+      nominatim: {
+        userAgent: env.VIA_NOMINATIM_USER_AGENT?.trim() || undefined,
+        baseUrl: env.VIA_NOMINATIM_BASE_URL?.trim() || undefined,
+      },
+    });
   } catch {
-    return offlineGeocodeProvider;
+    return createCompositeGeocodeProvider({ offlineOnly: true });
   }
 }
 
@@ -121,6 +137,8 @@ export function describeProviders(env: ProviderEnv = process.env): {
     route: route.id,
     geocode: geocode.id,
     routeIsOffline: route.id === OFFLINE_ROUTE_PROVIDER_ID,
-    geocodeIsOffline: geocode.id === OFFLINE_GEOCODE_PROVIDER_ID,
+    geocodeIsOffline:
+      geocode.id === OFFLINE_GEOCODE_PROVIDER_ID ||
+      env.VIA_GEOCODE_PROVIDER?.trim().toLowerCase() === "offline",
   };
 }
