@@ -1,8 +1,8 @@
 import { defineConfig } from "vitest/config";
-import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
-  plugins: [tsconfigPaths()],
+  // Resolve o alias "@/*" do tsconfig nativamente, sem plugin.
+  resolve: { tsconfigPaths: true },
   test: {
     // O núcleo de cálculo (src/domain) é TypeScript puro, sem React e sem DOM.
     // Rodar em ambiente node mantém a suíte rápida e prova que o domínio não
