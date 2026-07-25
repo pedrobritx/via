@@ -1,0 +1,121 @@
+@import "tailwindcss";
+
+/*
+  Paleta VIA.
+
+  Cada um dos cinco índices tem cor própria e constante em toda a interface — o
+  cartão, a barra comparativa e o eixo do radar de um índice são sempre da mesma
+  cor. As cores de texto foram escolhidas para passar em contraste 4.5:1
+  (WCAG 2.2 AA) sobre a superfície em que aparecem, nos dois temas.
+
+  Cor nunca é o único portador de informação: todo indicador também tem rótulo
+  textual e valor numérico, para leitores de tela e para daltonismo.
+*/
+
+:root {
+  --paper: #fbfaf7;
+  --surface: #ffffff;
+  --surface-sunken: #f4f2ec;
+  --ink: #14201c;
+  --muted: #55635d;
+  --line: #ddd8cd;
+
+  --primary: #0f6b5c;
+  --primary-ink: #ffffff;
+  --primary-soft: #e4f1ed;
+
+  --carbon: #2f7d5d;
+  --time: #21578f;
+  --cost: #8a5d0f;
+  --burden: #a04a2a;
+  --social: #64438f;
+
+  --warn-bg: #fdf3e3;
+  --warn-ink: #6d4406;
+  --warn-line: #e8cf9c;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #0f1211;
+    --surface: #171d1a;
+    --surface-sunken: #121716;
+    --ink: #e9ede9;
+    --muted: #9daba4;
+    --line: #2a332f;
+
+    --primary: #4fd1b5;
+    --primary-ink: #05211c;
+    --primary-soft: #10302a;
+
+    --carbon: #63c295;
+    --time: #7fb6f2;
+    --cost: #dda94a;
+    --burden: #e58f68;
+    --social: #b799e4;
+
+    --warn-bg: #2b2313;
+    --warn-ink: #f2d59a;
+    --warn-line: #4d3d18;
+  }
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-surface: var(--surface);
+  --color-sunken: var(--surface-sunken);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+
+  --color-primary: var(--primary);
+  --color-primary-ink: var(--primary-ink);
+  --color-primary-soft: var(--primary-soft);
+
+  --color-carbon: var(--carbon);
+  --color-time: var(--time);
+  --color-cost: var(--cost);
+  --color-burden: var(--burden);
+  --color-social: var(--social);
+
+  --color-warn-bg: var(--warn-bg);
+  --color-warn-ink: var(--warn-ink);
+  --color-warn-line: var(--warn-line);
+
+  /* Pilha do sistema: zero requisição de rede no build e na primeira pintura. */
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  --font-mono:
+    ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+    "Liberation Mono", monospace;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+}
+
+/*
+  Foco visível e forte em tudo que é interativo. O padrão do navegador some em
+  alguns temas; aqui ele é explícito porque navegação por teclado é requisito,
+  não cortesia.
+*/
+:focus-visible {
+  outline: 3px solid var(--primary);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+/* Respeita quem pediu menos movimento no sistema operacional. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
