@@ -76,3 +76,38 @@ faixa de confiança ali seria pior ainda: sugeriria rigor estatístico onde há
 julgamento documentado. A ausência é mais honesta que um intervalo inventado.
 
 O arredondamento é uma declaração de honestidade embutida no próprio número.
+
+## Nota sobre a fórmula em LaTeX
+
+> **Acrescentada em 2026-07-25.** A seção "Contra" acima previa este defeito nos
+> seus próprios termos. Ele aconteceu.
+
+A fórmula do custo escrevia o acento como `\acute{a}` dentro de `\text{}` — uma
+construção que o KaTeX recusa no modo texto. O componente pedia
+`throwOnError: false`, então o KaTeX não lançava: devolvia um
+`<span class="katex-error">` com o código-fonte em vermelho, e a alternativa que
+o próprio componente trazia para esse caso nunca era acionada. O teste existente
+media `formulaTex.length > 0` e achava tudo em ordem.
+
+Resultado: uma das cinco fórmulas do Modo Cientista exibia TeX cru desde que foi
+escrita, numa ferramenta cujo argumento é a auditabilidade.
+
+Três mudanças, nesta ordem de importância:
+
+1. **Teste que renderiza.** Toda `formulaTex` de todo cenário passa pelo KaTeX
+   com `throwOnError: true`. Ter uma string não é ter uma fórmula legível, e
+   medir comprimento nunca ia descobrir isso.
+2. **`throwOnError: true` no componente.** Com `false`, o `catch` que mostraria o
+   TeX cru de forma legível era código morto. Falhar de verdade é o que aciona a
+   alternativa.
+3. **O acento vai como caractere.** `\text{pedágio}`, não `\text{ped\acute{a}gio}`.
+
+**A versão dos índices não mudou.** `INDEX_VERSION` existe para dizer qual
+conjunto de fórmulas e constantes produziu um número; nenhum número mudou, e
+incrementar a versão faria quem guardou um resultado procurar uma diferença
+inexistente. O que mudou foi a renderização de uma string — defeito de
+apresentação, não de método.
+
+**O que continua verdadeiro.** O teste garante que a fórmula renderiza, não que
+ela descreve o código. Uma fórmula sintaticamente perfeita e conceitualmente
+errada passaria. Esse ponto fraco permanece aberto.

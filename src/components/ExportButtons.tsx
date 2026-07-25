@@ -31,12 +31,12 @@ export function ExportButtons({
   }
 
   return (
-    <section aria-labelledby="export-heading" className="flex flex-col gap-2">
-      <h3 id="export-heading" className="text-sm font-semibold">
+    <section aria-labelledby="export-heading" className="flex flex-col gap-4">
+      <h3 id="export-heading" className="eyebrow">
         {t("export.title")}
       </h3>
 
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-3">
         <button
           type="button"
           onClick={() =>
@@ -46,7 +46,7 @@ export function ExportButtons({
               "application/json",
             )
           }
-          className="rounded-md border border-line bg-surface px-3 py-2 text-xs font-medium"
+          className="chip"
         >
           {t("export.json")}
         </button>
@@ -55,13 +55,13 @@ export function ExportButtons({
           onClick={() =>
             download(toCSV(result), exportFilename(result, "csv"), "text/csv")
           }
-          className="rounded-md border border-line bg-surface px-3 py-2 text-xs font-medium"
+          className="chip"
         >
           {t("export.csv")}
         </button>
       </div>
 
-      <p className="text-xs text-muted">{t("export.help")}</p>
+      <p className="max-w-xl text-sm text-mute">{t("export.help")}</p>
     </section>
   );
 }

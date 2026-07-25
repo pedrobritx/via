@@ -88,6 +88,90 @@ export const ptBR = {
   "form.error.network":
     "Falha de comunicação com o servidor. Verifique a conexão e tente de novo.",
 
+
+  // --- Herói -----------------------------------------------------------
+  "hero.eyebrow": "Visualizador de impacto assistencial · Método aberto",
+  "hero.title.before": "Quanto custa, de verdade,",
+  "hero.title.emphasis": "ir a uma consulta",
+  "hero.lede":
+    "O paciente vê “consulta às 14h”. Não vê as três horas de trânsito, os R$ 60, os 4,9 kg de CO₂, nem o desgaste — que para quem tem 80 anos ou anda com dificuldade é ordens de grandeza maior. Esta ferramenta calcula essa conta invisível, e mostra a conta inteira.",
+  "hero.cue": "Comece pelo trajeto",
+  // Rótulos da tira de dados do herói: nomeiam a grandeza, o valor vem ao lado.
+  "hero.meta.indices": "Índices",
+  "hero.meta.sources": "Fontes citadas",
+  "hero.meta.open": "Fórmulas",
+  "hero.meta.openLink": "Ver a metodologia",
+
+  // --- Passo 01: o trajeto ---------------------------------------------
+  "step.trip.num": "01",
+  "step.trip.eyebrow": "Primeiro passo · Onde",
+  "step.trip.title.before": "Todo cálculo começa por",
+  "step.trip.title.emphasis": "uma distância",
+  "step.trip.lede":
+    "São necessários dois pontos. O VIA sempre conta ida e volta — o retorno é metade do custo e desaparece da maioria das estimativas. Informe o CEP, o endereço, o nome do hospital, ou cole as coordenadas.",
+
+  // --- Passo 02: o deslocamento ----------------------------------------
+  "step.modal.num": "02",
+  "step.modal.eyebrow": "Segundo passo · Como",
+  "step.modal.title.before": "O tempo que",
+  "step.modal.title.emphasis": "não aparece no mapa",
+  "step.modal.lede":
+    "Um aplicativo de rota informa quanto tempo o veículo leva em movimento. Não informa os vinte e quatro minutos parados no ponto de ônibus, nem os dez procurando vaga. Esse tempo é vida igual — e é o componente de maior peso na carga de deslocamento.",
+  "step.modal.pickLabel": "Escolha o modal",
+  "step.modal.detailsTitle": "Detalhes que mudam a conta",
+
+  // --- Passo 03: o perfil ----------------------------------------------
+  "step.profile.num": "03",
+  "step.profile.eyebrow": "Terceiro passo · Quem",
+  "step.profile.title.before": "A mesma viagem",
+  "step.profile.title.emphasis": "pesa diferente",
+  "step.profile.lede":
+    "Vinte quilômetros de ônibus para um adulto de 30 anos e para uma pessoa de 80 com dificuldade de andar são a mesma distância e experiências incomparáveis. O índice social mede esse peso — o peso que o deslocamento impõe à pessoa, nunca a pessoa.",
+  "step.profile.ethics":
+    "Um valor alto é argumento para remover a viagem: teleconsulta, transporte assistido, atendimento domiciliar. Nunca para restringir o acesso de alguém.",
+
+  // --- Passo 04: o resultado -------------------------------------------
+  "step.result.num": "04",
+  "step.result.eyebrow": "O resultado",
+  "step.result.title.before": "O que a viagem",
+  "step.result.title.emphasis": "realmente custa",
+  "step.result.lede":
+    "Presencial e teleconsulta, lado a lado. Cada número abre para mostrar a fórmula que o produziu, os valores de entrada e a fonte de cada constante.",
+  "step.result.waiting":
+    "Escolha a origem e o destino no passo 01. Sem os dois pontos não há distância, e sem distância não há cálculo.",
+  "step.result.stale":
+    "Algum dado mudou desde o último cálculo. Os números abaixo ainda são os anteriores.",
+  "form.recalculate": "Recalcular",
+
+  // --- As cinco medidas (didático, no estado vazio) ---------------------
+  "measures.eyebrow": "O que o VIA mede",
+  "measures.title.before": "Cinco medidas de",
+  "measures.title.emphasis": "um mesmo dia",
+  "measures.lede":
+    "Nenhuma delas sozinha descreve o custo de uma consulta. Juntas, começam a descrever.",
+  "measures.carbon.body":
+    "Distância de ida e volta multiplicada pelo fator do modal. Ônibus e metrô já são contados por passageiro; carro divide entre ocupantes — mas o total lançado na atmosfera não cai.",
+  "measures.time.body":
+    "Deslocamento, espera no ponto, procura de vaga, espera na unidade e a consulta. O tempo parado costuma superar o tempo em movimento.",
+  "measures.cost.body":
+    "Combustível, tarifas, pedágio, estacionamento. A renda perdida só entra se você informar a renda — não se inventa um salário para preencher a conta.",
+  "measures.burden.body":
+    "Índice de 0 a 100 que soma tempo, estresse, desconforto, estacionamento e imprevisibilidade. Os pesos são escolha do projeto, e isso está declarado em cada resultado.",
+  "measures.social.body":
+    "Quanto este deslocamento específico pesa neste perfil específico. Idade, mobilidade, acompanhante e renda. Mede a viagem, não a pessoa.",
+
+  // --- Controles novos --------------------------------------------------
+  "control.years": "anos",
+  "control.people": "pessoas",
+  "control.transfersUnit": "baldeações",
+  "control.optional": "opcional",
+  "control.step": "Passo",
+  "control.of": "de",
+  "control.pending": "aguardando os passos anteriores",
+  "control.done": "concluído",
+
+  "footer.builtWith": "Método aberto, código aberto.",
+
   // --- Resultados ---
   "results.title": "Resultado",
   "results.inPerson": "Presencial",

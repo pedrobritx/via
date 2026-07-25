@@ -30,7 +30,7 @@ export function BarCompare({
   remoteLabel,
 }: BarCompareProps) {
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-8">
       <Legend inPersonLabel={inPersonLabel} remoteLabel={remoteLabel} />
 
       {rows.map((row) => {
@@ -39,8 +39,8 @@ export function BarCompare({
         const remotePct = (row.remote / max) * 100;
 
         return (
-          <div key={row.key} className="flex flex-col gap-1.5">
-            <h4 className="text-sm font-medium">{row.label}</h4>
+          <div key={row.key} className="flex flex-col gap-2">
+            <h4 className="subsection-title">{row.label}</h4>
 
             <Bar
               scenario={inPersonLabel}
@@ -76,11 +76,11 @@ function Bar({
   solid?: boolean;
 }) {
   return (
-    <div className="flex items-center gap-3">
-      <span className="w-24 shrink-0 text-xs text-muted">{scenario}</span>
-      <div className="h-5 flex-1 overflow-hidden rounded-sm bg-sunken">
+    <div className="flex items-center gap-4">
+      <span className="mono-label w-24 shrink-0">{scenario}</span>
+      <div className="h-5 flex-1 overflow-hidden bg-shadow">
         <div
-          className="h-full rounded-sm"
+          className="h-full"
           style={{
             width: `${Math.max(percent, 0.8)}%`,
             backgroundColor: color,
@@ -93,7 +93,7 @@ function Bar({
           }}
         />
       </div>
-      <span className="w-28 shrink-0 text-right font-mono text-xs tabular-nums">
+      <span className="numeric w-28 shrink-0 text-right text-sm text-ink">
         {text}
       </span>
     </div>
@@ -108,18 +108,15 @@ function Legend({
   remoteLabel: string;
 }) {
   return (
-    <div className="flex flex-wrap items-center gap-4 text-xs text-muted">
-      <span className="flex items-center gap-1.5">
-        <span
-          aria-hidden="true"
-          className="inline-block h-3 w-6 rounded-sm bg-ink"
-        />
+    <div className="mono-label flex flex-wrap items-center gap-5">
+      <span className="flex items-center gap-2">
+        <span aria-hidden="true" className="inline-block h-3 w-6 bg-ink" />
         {inPersonLabel}
       </span>
-      <span className="flex items-center gap-1.5">
+      <span className="flex items-center gap-2">
         <span
           aria-hidden="true"
-          className="inline-block h-3 w-6 rounded-sm bg-ink opacity-45"
+          className="inline-block h-3 w-6 bg-ink opacity-45"
           style={{
             backgroundImage:
               "repeating-linear-gradient(45deg, rgba(255,255,255,.55) 0 4px, transparent 4px 8px)",
