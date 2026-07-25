@@ -60,13 +60,20 @@ export function JourneyStrip({
           return (
             <li key={step.key} className="flex flex-col">
               <Connector />
-              <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+              {/*
+                Grade, e não `flex-wrap`: com rótulo longo o tempo acumulado
+                caía para a linha de baixo e perdia o alinhamento à direita,
+                que é justamente o que permite ler a coluna de cima a baixo.
+              */}
+              <div className="grid grid-cols-[auto_minmax(0,1fr)] items-baseline gap-x-4 gap-y-1 sm:grid-cols-[auto_minmax(0,1fr)_auto]">
                 <Ordinal n={position + 1} />
-                <span className="text-ink">{step.label}</span>
-                <span className="numeric text-sm text-mute">
-                  +{formatDuration(step.contribution, locale)}
+                <span className="text-ink">
+                  {step.label}{" "}
+                  <span className="numeric whitespace-nowrap text-sm text-mute">
+                    +{formatDuration(step.contribution, locale)}
+                  </span>
                 </span>
-                <span className="numeric ml-auto text-sm text-mute">
+                <span className="numeric col-start-2 whitespace-nowrap text-sm text-mute sm:col-start-3 sm:text-right">
                   {formatDuration(accumulated, locale)} {t("journey.accumulated")}
                 </span>
               </div>
