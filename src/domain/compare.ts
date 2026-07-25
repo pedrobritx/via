@@ -117,53 +117,21 @@ export async function calculateImpact(
 }
 
 /**
- * Resumo em linguagem simples.
+ * Quais economias são grandes o bastante para entrar no resumo.
  *
- * O objetivo é a frase que uma pessoa repete para outra: "economizei uma hora e
- * meia e quarenta reais". Números que ninguém consegue recontar não mudam
- * decisão nenhuma.
+ * O domínio decide *o que* vale mencionar; quem monta a frase e formata os
+ * números é a camada de apresentação, que conhece o idioma. Formatar aqui
+ * produziria "146.84" no meio de uma interface que escreve "146,85".
  */
-export function summarize(result: ImpactResult): string {
+export function significantSavings(result: ImpactResult): Array<
+  "time" | "cost" | "carbon"
+> {
   const { savings } = result;
-  const parts: string[] = [];
+  const kinds: Array<"time" | "cost" | "carbon"> = [];
 
-  if (savings.timeMin >= 1) {
-    parts.push(formatDuration(savings.timeMin));
-  }
-  if (savings.costBRL >= 0.5) {
-    parts.push(
-      savings.costBRL.toLocaleString("pt-BR", {
-        style: "currency",
-        currency: "BRL",
-      }),
-    );
-  }
-  if (savings.carbonKg >= 0.01) {
-    parts.push(`${roundTo(savings.carbonKg, 2)} kg de CO₂`);
-  }
+  if (savings.timeMin >= 1) kinds.push("time");
+  if (savings.costBRL >= 0.5) kinds.push("cost");
+  if (savings.carbonKg >= 0.01) kinds.push("carbon");
 
-  if (parts.length === 0) {
-    return "Neste caso, a teleconsulta e a consulta presencial têm impacto equivalente.";
-  }
-
-  const list =
-    parts.length === 1
-      ? parts[0]
-      : `${parts.slice(0, -1).join(", ")} e ${parts[parts.length - 1]}`;
-
-  const prefix = result.remoteViable
-    ? "Com a teleconsulta, você economiza"
-    : "A teleconsulta economizaria";
-
-  return `${prefix} ${list}.`;
-}
-
-function formatDuration(minutes: number): string {
-  const total = Math.round(minutes);
-  const hours = Math.floor(total / 60);
-  const mins = total % 60;
-
-  if (hours === 0) return `${mins} min`;
-  if (mins === 0) return hours === 1 ? "1 hora" : `${hours} horas`;
-  return `${hours}h${String(mins).padStart(2, "0")}`;
+  return kinds;
 }

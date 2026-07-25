@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { calculateImpactWithRoute, summarize } from "../compare";
+import { calculateImpactWithRoute, significantSavings } from "../compare";
 import {
   BURDEN_TIME_REFERENCE_MIN,
   CONSULTATION_MIN,
@@ -571,34 +571,39 @@ describe("comparação e portão de viabilidade", () => {
   });
 });
 
-describe("resumo em linguagem simples", () => {
-  it("usa horas e minutos legíveis e moeda em reais", () => {
-    const texto = summarize(calc({ profile: profile({ monthlyIncomeBRL: 4400 }) }));
-    expect(texto).toMatch(/economiza/i);
-    expect(texto).toMatch(/R\$/);
-    expect(texto).toMatch(/CO₂/);
-  });
-
-  it("usa o condicional quando a teleconsulta é inviável", () => {
-    const texto = summarize(
-      calc({ profile: profile({ hasReliableInternet: false }) }),
+describe("economias significativas", () => {
+  it("lista tempo, custo e carbono quando todos são relevantes", () => {
+    const kinds = significantSavings(
+      calc({ profile: profile({ monthlyIncomeBRL: 4400 }) }),
     );
-    expect(texto).toMatch(/economizaria/i);
+    expect(kinds).toEqual(["time", "cost", "carbon"]);
   });
 
-  it("não promete economia quando os cenários são equivalentes", () => {
+  it("omite o custo quando a economia financeira é desprezível", () => {
+    const kinds = significantSavings(
+      calc({
+        modal: "walking",
+        profile: profile({ countProductivityLoss: false }),
+      }),
+    );
+    expect(kinds).not.toContain("cost");
+    expect(kinds).toContain("time");
+  });
+
+  it("mesmo sem deslocamento, a espera na unidade ainda é tempo economizado", () => {
+    // Distância zero: nada de carbono nem de custo. Mas a teleconsulta ainda
+    // evita a espera na unidade de saúde, e isso é economia real.
     const semRota: RouteLeg = { ...ROUTE, distanceKm: 0, durationMin: 0 };
-    const texto = summarize(
+    const kinds = significantSavings(
       calc(
         {
           modal: "walking",
           profile: profile({ countProductivityLoss: false }),
-          consultationMinutes: 15,
         },
         semRota,
       ),
     );
-    expect(texto).toMatch(/equivalente|economiza/i);
+    expect(kinds).toEqual(["time"]);
   });
 });
 
