@@ -205,8 +205,13 @@ export interface Uncertainty {
 }
 
 /**
- * Uma parcela de um índice: de onde veio, quanto entrou, com que peso, e quanto
- * contribuiu para o total.
+ * Uma parcela aditiva de um índice.
+ *
+ * Invariante: a soma das `contribution` de todos os componentes é igual ao
+ * `value` do índice, antes de arredondamento. Há teste garantindo isso para os
+ * cinco índices. Essa disciplina é o que permite exibir a composição sem que
+ * ela precise ser mantida à mão — e o que impede que a explicação e o número
+ * saiam de sincronia.
  */
 export interface IndexComponent {
   key: string;
@@ -216,9 +221,24 @@ export interface IndexComponent {
   inputUnit: string;
   /** Peso aplicado, quando o índice é uma média ponderada. */
   weight?: number;
-  /** Contribuição para o valor final do índice. */
+  /** Contribuição para o valor final do índice, na unidade do índice. */
   contribution: number;
   /** Aponta para uma entrada em `docs/referencias.md`. */
+  sourceId: string;
+}
+
+/**
+ * Uma entrada multiplicativa ou de contexto, que participa do cálculo mas não
+ * é uma parcela somável — um fator de emissão, uma ocupação, um preço.
+ *
+ * Separá-las dos componentes é o que mantém a invariante da soma verdadeira e
+ * verificável, em vez de aproximada.
+ */
+export interface IndexInput {
+  key: string;
+  label: string;
+  value: number;
+  unit: string;
   sourceId: string;
 }
 
@@ -238,7 +258,10 @@ export interface IndexBreakdown {
   uncertainty?: Uncertainty;
   /** Fórmula em LaTeX, para renderizar com KaTeX. */
   formulaTex: string;
+  /** Parcelas somáveis. Suas contribuições somam `value`. */
   components: IndexComponent[];
+  /** Fatores e constantes que entraram no cálculo sem serem parcelas. */
+  inputs: IndexInput[];
   sourceIds: string[];
   indexVersion: string;
   /**

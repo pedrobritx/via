@@ -555,9 +555,62 @@ export const DEFAULT_OCCUPANCY = exact(
   "Assume-se que o paciente viaja sozinho, salvo indicação contrária.",
 );
 
+/**
+ * Fator de congestionamento, relativo à condição urbana TÍPICA.
+ *
+ * O padrão é 1,0, e isso é deliberado. As velocidades de `MODAL_SPEED_KMH` já
+ * são médias porta a porta em cidade brasileira, ou seja, já embutem o trânsito
+ * de um dia comum. Adotar 1,3 como padrão contaria o congestionamento duas
+ * vezes e inflaria todos os tempos. Valores acima de 1 significam "pior que o
+ * dia típico" — hora do rush, chuva, obra.
+ */
 export const DEFAULT_CONGESTION_FACTOR = exact(
-  1.3,
+  1.0,
   "adimensional",
   "antp-mobilidade",
-  "Congestionamento urbano típico em horário comercial: o trajeto leva 30% a mais que em fluxo livre.",
+  "1,0 = condição urbana típica, já refletida nas velocidades médias. Acima de 1,0 = pior que o típico.",
+);
+
+// ---------------------------------------------------------------------------
+// Cenário remoto
+// ---------------------------------------------------------------------------
+
+/**
+ * A teleconsulta não é isenta de carga — apenas muito menor. Tratá-la como
+ * zero absoluto seria o espelho do erro que o projeto denuncia.
+ */
+export const REMOTE_STRESS = exact(
+  15,
+  "pontos",
+  "via-normative-v1",
+  "Ansiedade de lidar com a tecnologia e de ser atendido por vídeo.",
+);
+
+export const REMOTE_DISCOMFORT = exact(
+  5,
+  "pontos",
+  "via-normative-v1",
+  "Consulta feita de casa, sentado.",
+);
+
+export const REMOTE_UNPREDICTABILITY = exact(
+  20,
+  "pontos",
+  "via-normative-v1",
+  "A chamada pode cair, o link pode não abrir, o áudio pode falhar.",
+);
+
+/**
+ * Fração do ônus social do perfil que permanece na teleconsulta.
+ *
+ * Não é zero. Operar um aplicativo de vídeo é, em si, uma barreira para parte
+ * das pessoas idosas e com deficiência — as mesmas que mais se beneficiariam de
+ * não viajar. Zerar este componente esconderia justamente o grupo que a
+ * ferramenta pretende enxergar.
+ */
+export const REMOTE_SOCIAL_RESIDUAL = exact(
+  0.15,
+  "adimensional",
+  "via-normative-v1",
+  "15% do ônus social do perfil permanece, referente à barreira de usar o meio digital.",
 );
