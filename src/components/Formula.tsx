@@ -11,15 +11,20 @@ import katex from "katex";
 export function Formula({ tex }: { tex: string }) {
   let html: string;
   try {
+    // `throwOnError: true` de propósito. Com `false`, o KaTeX engole o erro e
+    // devolve um `<span class="katex-error">` com o TeX cru em vermelho — o
+    // `catch` abaixo nunca disparava, e uma fórmula quebrada passava como se
+    // fosse decisão de estilo. Foi assim que a fórmula do custo ficou sem
+    // renderizar sem ninguém notar. Falhar aqui é o que aciona a alternativa.
     html = katex.renderToString(tex, {
-      throwOnError: false,
+      throwOnError: true,
       displayMode: true,
       output: "html",
     });
   } catch {
     // Se o KaTeX falhar, mostrar o TeX cru é melhor que sumir com a fórmula.
     return (
-      <pre className="overflow-x-auto rounded bg-sunken px-3 py-2 font-mono text-xs">
+      <pre className="numeric overflow-x-auto border border-line bg-shadow px-4 py-3 text-xs">
         {tex}
       </pre>
     );

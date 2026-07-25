@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * Radar dos componentes da carga de deslocamento.
  *
@@ -6,6 +8,8 @@
  * `<title>`/`<desc>`, e a tabela de dados equivalente fica visível em Modo
  * Cientista, não escondida atrás de um `aria-label` que ninguém lê.
  */
+
+import { useId } from "react";
 
 interface RadarAxis {
   label: string;
@@ -28,6 +32,12 @@ export function RadarChart({
   color = "var(--burden)",
   size = 260,
 }: RadarChartProps) {
+  // Dois radares convivem na mesma página (carga e social). Identificador fixo
+  // duplicaria o `id` e faria `aria-labelledby` apontar para o gráfico errado.
+  const uid = useId();
+  const titleId = `${uid}-title`;
+  const descId = `${uid}-desc`;
+
   if (axes.length < 3) return null;
 
   const cx = size / 2;
@@ -50,11 +60,11 @@ export function RadarChart({
     <svg
       viewBox={`0 0 ${size} ${size}`}
       role="img"
-      aria-labelledby="radar-title radar-desc"
+      aria-labelledby={`${titleId} ${descId}`}
       className="mx-auto h-auto w-full max-w-[300px]"
     >
-      <title id="radar-title">{title}</title>
-      <desc id="radar-desc">{description}</desc>
+      <title id={titleId}>{title}</title>
+      <desc id={descId}>{description}</desc>
 
       {/* Anéis de referência */}
       {rings.map((ring) => (
@@ -112,7 +122,7 @@ export function RadarChart({
             y={y}
             textAnchor={anchor}
             dominantBaseline="middle"
-            fill="var(--muted)"
+            fill="var(--ink-mute)"
             fontSize="11"
           >
             {axis.label}

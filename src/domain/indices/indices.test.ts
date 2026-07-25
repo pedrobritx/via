@@ -110,6 +110,39 @@ describe("invariante estrutural dos índices", () => {
     }
   });
 
+  /*
+    Ter uma string de TeX não é ter uma fórmula legível. A do custo escrevia o
+    acento como `\acute{a}` dentro de `\text{}`, que o KaTeX recusa, e passou
+    meses exibindo o código-fonte em vermelho — o teste acima, que só media o
+    comprimento, achava tudo em ordem. Renderizar de verdade é o que descobre
+    isso.
+  */
+  it("toda fórmula é TeX válido e renderiza", async () => {
+    const { default: katex } = await import("katex");
+
+    for (const scenario of scenarios) {
+      for (const index of [
+        scenario.carbon,
+        scenario.time,
+        scenario.cost,
+        scenario.burden,
+        scenario.social,
+      ]) {
+        try {
+          katex.renderToString(index.formulaTex, {
+            throwOnError: true,
+            displayMode: true,
+            output: "html",
+          });
+        } catch (error) {
+          expect.fail(
+            `${scenario.scenario}/${index.key}: ${(error as Error).message}`,
+          );
+        }
+      }
+    }
+  });
+
   it("nenhum índice devolve NaN ou infinito", () => {
     for (const scenario of scenarios) {
       for (const index of [

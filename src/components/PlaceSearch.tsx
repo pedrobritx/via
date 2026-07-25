@@ -117,8 +117,8 @@ export function PlaceSearch({
   }
 
   return (
-    <div className="flex flex-col gap-1.5" ref={containerRef}>
-      <label htmlFor={inputId} className="text-sm font-medium">
+    <div className="flex flex-col gap-2" ref={containerRef}>
+      <label htmlFor={inputId} className="mono-label">
         {t(labelKey)}
         {required ? (
           <span aria-hidden="true" className="text-burden">
@@ -128,17 +128,17 @@ export function PlaceSearch({
       </label>
 
       {value ? (
-        <div className="flex items-center justify-between gap-2 rounded-md border border-primary bg-primary-soft px-3 py-2">
-          <span className="text-sm">
+        <div className="flex items-start justify-between gap-4 border-l-2 border-green bg-green-wash px-4 py-3">
+          <span className="min-w-0">
             <span className="sr-only">{t("form.selected")}: </span>
-            {value.label}
+            <span className="block text-green-deep">{value.label}</span>
             {/*
               De onde veio este lugar. Mesma disciplina das constantes: um dado
               sem procedência não é auditável — e aqui a procedência muda a
               precisão do cálculo inteiro.
             */}
             {value.source ? (
-              <span className="mt-0.5 block text-xs text-muted">
+              <span className="mono-label mt-1.5 block">
                 {t(`form.source.${value.source}` as MessageKey)}
               </span>
             ) : null}
@@ -146,52 +146,54 @@ export function PlaceSearch({
           <button
             type="button"
             onClick={() => onChange(null)}
-            className="shrink-0 rounded px-2 py-1 text-xs font-medium underline underline-offset-2 hover:no-underline"
+            className="btn-quiet shrink-0"
           >
             {t("form.clear")}
           </button>
         </div>
       ) : (
         <div className="relative">
-          <input
-            id={inputId}
-            type="text"
-            role="combobox"
-            aria-expanded={open && visibleResults.length > 0}
-            aria-controls={listId}
-            aria-autocomplete="list"
-            aria-activedescendant={
-              activeIndex >= 0 ? `${listId}-${activeIndex}` : undefined
-            }
-            aria-describedby={helpKey ? helpId : undefined}
-            autoComplete="off"
-            placeholder={t(placeholderKey)}
-            value={query}
-            onChange={(e) => {
-              const next = e.target.value;
-              setQuery(next);
-              setOpen(true);
-              // O estado de carregamento nasce aqui, no manipulador de evento,
-              // e não dentro do efeito.
-              setLoading(next.trim().length >= 2);
-            }}
-            onFocus={() => setOpen(true)}
-            onKeyDown={onKeyDown}
-            className="w-full rounded-md border border-line bg-surface px-3 py-2 text-sm"
-          />
+          <div className="field-shell">
+            <input
+              id={inputId}
+              type="text"
+              role="combobox"
+              className="field"
+              aria-expanded={open && visibleResults.length > 0}
+              aria-controls={listId}
+              aria-autocomplete="list"
+              aria-activedescendant={
+                activeIndex >= 0 ? `${listId}-${activeIndex}` : undefined
+              }
+              aria-describedby={helpKey ? helpId : undefined}
+              autoComplete="off"
+              placeholder={t(placeholderKey)}
+              value={query}
+              onChange={(e) => {
+                const next = e.target.value;
+                setQuery(next);
+                setOpen(true);
+                // O estado de carregamento nasce aqui, no manipulador de
+                // evento, e não dentro do efeito.
+                setLoading(next.trim().length >= 2);
+              }}
+              onFocus={() => setOpen(true)}
+              onKeyDown={onKeyDown}
+            />
+          </div>
 
           {open && queryIsSearchable ? (
             <ul
               id={listId}
               role="listbox"
-              className="absolute z-20 mt-1 max-h-64 w-full overflow-auto rounded-md border border-line bg-surface shadow-lg"
+              className="absolute z-30 mt-1 max-h-72 w-full overflow-auto border border-line bg-paper shadow-lg"
             >
               {loading ? (
-                <li className="px-3 py-2 text-sm text-muted">
+                <li className="px-4 py-3 text-sm text-mute">
                   {t("form.searching")}
                 </li>
               ) : visibleResults.length === 0 ? (
-                <li className="px-3 py-2 text-sm text-muted">
+                <li className="px-4 py-3 text-sm text-mute">
                   {t("form.noResults")}
                 </li>
               ) : (
@@ -206,8 +208,8 @@ export function PlaceSearch({
                       type="button"
                       onClick={() => select(place)}
                       onMouseEnter={() => setActiveIndex(index)}
-                      className={`w-full px-3 py-2 text-left text-sm ${
-                        index === activeIndex ? "bg-primary-soft" : ""
+                      className={`w-full border-b border-line/50 px-4 py-2.5 text-left text-sm ${
+                        index === activeIndex ? "bg-green-wash" : ""
                       }`}
                     >
                       {place.label}
@@ -221,7 +223,7 @@ export function PlaceSearch({
       )}
 
       {helpKey ? (
-        <p id={helpId} className="text-xs text-muted">
+        <p id={helpId} className="text-sm text-mute">
           {t(helpKey)}
         </p>
       ) : null}

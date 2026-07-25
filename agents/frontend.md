@@ -20,11 +20,26 @@ visualização dos índices — acessível e em português correto.
 - Não adicionar biblioteca de gráficos. Radar e barras são SVG à mão, por
   tamanho e por controle de acessibilidade.
 - Não esconder ressalva em rodapé ou tooltip. `caveats` é parte do dado.
+- **Não animar número.** Contagem crescente pede que o valor seja sentido, não
+  conferido, e é o oposto do que esta ferramenta promete. Ver
+  [ADR 0004](../docs/adr/0004-interface-editorial-em-percurso-guiado.md).
+- **Não usar emoji.** Marcadores são tipográficos. Emoji muda de desenho entre
+  plataformas e é anunciado com um nome que ninguém escolheu.
+- **Não travar um passo do percurso atrás do anterior.** O estado de "aguardando"
+  é visual e textual; o conteúdo continua no DOM e alcançável.
+- **Não aplicar estado inicial de animação por CSS.** O `data-reveal="pending"`
+  nasce em JavaScript, para que a página sem script apareça inteira.
 
 ## Entradas
 
 - Contrato dos tipos em `src/domain/types.ts`.
 - Chaves disponíveis em `src/i18n/messages/pt-BR.ts`.
+- Sistema visual e razões por trás dele:
+  [ADR 0004](../docs/adr/0004-interface-editorial-em-percurso-guiado.md), com os
+  tokens e os contrastes medidos no cabeçalho de `src/app/globals.css`.
+- Primitivas prontas em `src/components/editorial.tsx`. Antes de escrever um
+  controle, confira se já existe — e se for escrever, use elemento nativo por
+  dentro, como as de lá fazem.
 - Requisito de acessibilidade: WCAG 2.2 AA.
 
 ## Saídas
@@ -43,8 +58,10 @@ visualização dos índices — acessível e em português correto.
 - Widget composto segue o padrão ARIA correspondente. O combobox de busca
   responde a setas, Enter e Escape.
 - Resultado assíncrono anunciado por `aria-live`.
-- Contraste de 4.5:1 **medido**, nos dois temas, sobre todas as superfícies em
-  que o texto aparece.
+- Contraste de 4.5:1 **medido** — não presumido — sobre todas as superfícies em
+  que o texto aparece (`--paper`, `--paper-deep`, `--paper-shadow` e os blocos
+  invertidos). Texto sobre cor com transparência se mede na cor composta: o
+  placeholder do campo de busca reprovava a 2,89:1 só por estar a 70%.
 - Cor nunca é o único portador de informação. As barras do cenário remoto são
   listradas além de mais claras.
 - Gráfico tem `<title>`, `<desc>` e equivalente textual.

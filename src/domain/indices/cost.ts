@@ -39,7 +39,9 @@ import { roundTripKm, type ScenarioContext } from "./context";
 const LABEL = "Custo";
 const UNIT = "R$";
 
-const FORMULA_IN_PERSON = String.raw`C = C_{\text{transporte}} + C_{\text{ped\acute{a}gio}} + C_{\text{estacionamento}} + \frac{R_{\text{mensal}}}{220} \times h`;
+// O acento vai como caractere, não como `\acute{a}`: no modo texto do KaTeX a
+// macro de acento é inválida, e a fórmula inteira deixava de renderizar.
+const FORMULA_IN_PERSON = String.raw`C = C_{\text{transporte}} + C_{\text{pedágio}} + C_{\text{estacionamento}} + \frac{R_{\text{mensal}}}{220} \times h`;
 
 const FORMULA_REMOTE = String.raw`C = \frac{R_{\text{mensal}}}{220} \times h`;
 

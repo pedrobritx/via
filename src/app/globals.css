@@ -1,114 +1,173 @@
 @import "tailwindcss";
 
 /*
-  Paleta VIA.
+  ============================================================================
+  VIA — sistema visual editorial
+  ============================================================================
 
-  Cada um dos cinco índices tem cor própria e constante em toda a interface — o
-  cartão, a barra comparativa e o eixo do radar de um índice são sempre da mesma
-  cor. As cores de texto foram escolhidas para passar em contraste 4.5:1
-  (WCAG 2.2 AA) sobre a superfície em que aparecem, nos dois temas.
+  Tipografia e ritmo do sistema editorial-acadêmico (Fraunces para display,
+  Newsreader para leitura, JetBrains Mono para rótulos), com a paleta trocada:
+  o primário é o verde profundo do VIA, não o bordô canônico. A troca é
+  prevista pelo sistema e aqui ela é semântica — verde comunica saúde e
+  ambiente, que é exatamente o assunto; vinho num contexto clínico remeteria
+  a alerta.
 
-  Cor nunca é o único portador de informação: todo indicador também tem rótulo
-  textual e valor numérico, para leitores de tela e para daltonismo.
+  TEMA ÚNICO, claro e quente. Não há variante escura: o sistema editorial foi
+  desenhado para papel, e inverter o creme quebraria a relação entre ouro,
+  verde e tinta. `color-scheme: only light` impede que o navegador tente
+  inverter por conta própria.
+
+  CONTRASTE MEDIDO, não presumido. Os valores abaixo foram calculados sobre as
+  três superfícies (paper, deep, shadow) antes de entrarem aqui:
+
+    ink        15.16 : 10.26 : 11.78      green      8.10 : 7.25 : 6.29
+    ink-soft   10.26 :  9.18 :  7.97      carbon     5.28 : 4.73 : 4.11
+    ink-mute    5.23 :  4.68 :  4.07      time       6.27 : 5.61 : 4.87
+                                          cost       6.09 : 5.45 : 4.73
+                                          burden     5.67 : 5.07 : 4.40
+                                          social     7.46 : 6.68 : 5.80
+
+  Duas restrições que saem dessas medidas e não devem ser contornadas:
+  - `--ink-mute` só sobre `paper` e `deep` (4.07 sobre `shadow` reprova).
+  - `--gold` e `--green-light` NUNCA como texto sobre creme (2.44 e 3.62).
+    Ouro é ornamento; verde-claro é borda e estado de foco.
 */
 
 :root {
-  --paper: #fbfaf7;
-  --surface: #ffffff;
-  --surface-sunken: #f4f2ec;
-  --ink: #14201c;
-  --muted: #55635d;
-  --line: #ddd8cd;
+  color-scheme: only light;
 
-  --primary: #0f6b5c;
-  --primary-ink: #ffffff;
-  --primary-soft: #e4f1ed;
+  /* --- Papel ------------------------------------------------------------ */
+  --paper: #f2ebdd;
+  --paper-deep: #e8dfcb;
+  --paper-shadow: #dcd0b8;
 
-  --carbon: #2d7757;
+  /* --- Tinta ------------------------------------------------------------ */
+  --ink: #1a1612;
+  --ink-soft: #3d342c;
+  --ink-mute: #6b5f52;
+
+  /* --- Primário: verde profundo (substitui o bordô do sistema) ---------- */
+  --green: #1b4d42;
+  --green-deep: #0f3229;
+  --green-light: #4a8571;
+  --green-wash: #e2ece7;
+
+  /* --- Ouro: só ornamento e blocos invertidos --------------------------- */
+  --gold: #b8924a;
+  --gold-soft: #d4b47a;
+
+  --line: #c7b89a;
+
+  /* --- Os cinco índices ------------------------------------------------- */
+  --carbon: #3f6b2e;
   --time: #21578f;
-  --cost: #8a5d0f;
-  --burden: #a04a2a;
-  --social: #64438f;
+  --cost: #755008;
+  --burden: #a03a22;
+  --social: #5a3b80;
 
-  --warn-bg: #fdf3e3;
-  --warn-ink: #6d4406;
-  --warn-line: #e8cf9c;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --paper: #0f1211;
-    --surface: #171d1a;
-    --surface-sunken: #121716;
-    --ink: #e9ede9;
-    --muted: #9daba4;
-    --line: #2a332f;
-
-    --primary: #4fd1b5;
-    --primary-ink: #05211c;
-    --primary-soft: #10302a;
-
-    --carbon: #63c295;
-    --time: #7fb6f2;
-    --cost: #dda94a;
-    --burden: #e58f68;
-    --social: #b799e4;
-
-    --warn-bg: #2b2313;
-    --warn-ink: #f2d59a;
-    --warn-line: #4d3d18;
-  }
+  --warn-bg: #f6e9cf;
+  --warn-ink: #6b4406;
+  --warn-line: #d8bc82;
 }
 
 @theme inline {
   --color-paper: var(--paper);
-  --color-surface: var(--surface);
-  --color-sunken: var(--surface-sunken);
+  --color-deep: var(--paper-deep);
+  --color-shadow: var(--paper-shadow);
   --color-ink: var(--ink);
-  --color-muted: var(--muted);
+  --color-soft: var(--ink-soft);
+  --color-mute: var(--ink-mute);
+  --color-green: var(--green);
+  --color-green-deep: var(--green-deep);
+  --color-green-light: var(--green-light);
+  --color-green-wash: var(--green-wash);
+  --color-gold: var(--gold);
+  --color-gold-soft: var(--gold-soft);
   --color-line: var(--line);
-
-  --color-primary: var(--primary);
-  --color-primary-ink: var(--primary-ink);
-  --color-primary-soft: var(--primary-soft);
-
   --color-carbon: var(--carbon);
   --color-time: var(--time);
   --color-cost: var(--cost);
   --color-burden: var(--burden);
   --color-social: var(--social);
-
   --color-warn-bg: var(--warn-bg);
   --color-warn-ink: var(--warn-ink);
   --color-warn-line: var(--warn-line);
 
-  /* Pilha do sistema: zero requisição de rede no build e na primeira pintura. */
-  --font-sans:
-    ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
-    "Helvetica Neue", Arial, sans-serif;
-  --font-mono:
-    ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
-    "Liberation Mono", monospace;
+  /* As famílias vêm de next/font, que auto-hospeda e evita requisição a
+     terceiros no navegador de quem usa. */
+  --font-display: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  --font-body: var(--font-newsreader), Georgia, "Times New Roman", serif;
+  --font-mono: var(--font-jetbrains), Menlo, Monaco, monospace;
 }
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
 
 body {
   background: var(--paper);
-  color: var(--ink);
-  font-family: var(--font-sans);
+  color: var(--ink-soft);
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Textura de papel. Sutil o bastante para se notar só na ausência. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    radial-gradient(
+      circle at 18% 22%,
+      rgba(27, 77, 66, 0.05) 0%,
+      transparent 55%
+    ),
+    radial-gradient(
+      circle at 82% 78%,
+      rgba(184, 146, 74, 0.06) 0%,
+      transparent 55%
+    );
+}
+
+body > * {
+  position: relative;
+  z-index: 1;
+}
+
+::selection {
+  background: var(--green-wash);
+  color: var(--green-deep);
+}
+
+:focus-visible {
+  outline: 2.5px solid var(--green);
+  outline-offset: 3px;
+  border-radius: 2px;
 }
 
 /*
-  Foco visível e forte em tudo que é interativo. O padrão do navegador some em
-  alguns temas; aqui ele é explícito porque navegação por teclado é requisito,
-  não cortesia.
+  Revelação ao rolar. O estado inicial só é aplicado quando o JavaScript
+  assume (`[data-reveal]` recebe `data-reveal="pending"`), de modo que sem
+  script — ou com script falhando — o conteúdo aparece normalmente em vez de
+  ficar invisível para sempre.
 */
-:focus-visible {
-  outline: 3px solid var(--primary);
-  outline-offset: 2px;
-  border-radius: 3px;
+[data-reveal="pending"] {
+  opacity: 0;
+  transform: translateY(14px);
 }
 
-/* Respeita quem pediu menos movimento no sistema operacional. */
+[data-reveal="shown"] {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 620ms cubic-bezier(0.22, 0.61, 0.36, 1),
+    transform 620ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -117,5 +176,471 @@ body {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+
+  /* Quem pediu menos movimento recebe o conteúdo já posicionado, não uma
+     animação acelerada. */
+  [data-reveal="pending"] {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ==========================================================================
+   Sistema visual
+   ==========================================================================
+
+   Tudo daqui em diante vive na camada `components`, abaixo da camada
+   `utilities` do Tailwind. Sem isso, `.mono-label` — que define uma cor —
+   venceria um `text-green` escrito ao lado dela, só por vir depois no arquivo.
+   Com a camada, a classe do sistema dá a forma e o utilitário ajusta o
+   detalhe: a ordem que qualquer pessoa esperaria ao ler a marcação.
+   ========================================================================== */
+
+@layer components {
+  /* --- Tipografia ------------------------------------------------------- */
+
+  .display {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(2.75rem, 7.5vw, 6rem);
+    line-height: 0.98;
+    letter-spacing: -0.035em;
+    color: var(--ink);
+    text-wrap: balance;
+  }
+
+  /*
+    A ênfase é itálica, nunca negrito, e cobre UMA ideia por título — a que
+    carrega o peso conceitual da frase.
+  */
+  .display em,
+  .section-title em {
+    font-style: italic;
+    font-weight: 300;
+    color: var(--green-deep);
+  }
+
+  .section-title {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(1.85rem, 4vw, 3rem);
+    line-height: 1.04;
+    letter-spacing: -0.025em;
+    color: var(--ink);
+    text-wrap: balance;
+  }
+
+  .subsection-title {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 1.3rem;
+    line-height: 1.25;
+    letter-spacing: -0.015em;
+    color: var(--ink);
+  }
+
+  .lede {
+    font-size: 1.16rem;
+    line-height: 1.62;
+    color: var(--ink-soft);
+    max-width: 40rem;
+  }
+
+  /* Rótulo de contexto, com a linha que o antecede. */
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.19em;
+    color: var(--green);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .eyebrow::before {
+    content: "";
+    width: 2rem;
+    height: 1px;
+    background: var(--green);
+    flex-shrink: 0;
+  }
+
+  .eyebrow-plain {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--green);
+  }
+
+  /* Numeral de seção: itálico serifado, o marcador do sistema. */
+  .section-num {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(3rem, 7vw, 4.75rem);
+    line-height: 0.82;
+    letter-spacing: -0.02em;
+    color: var(--green);
+    font-variant-numeric: lining-nums;
+  }
+
+  .mono-label {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--ink-mute);
+  }
+
+  .numeric {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Assinatura do topo. */
+  .wordmark {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 1.125rem;
+    letter-spacing: 0.22em;
+    color: var(--ink);
+  }
+
+  /* Descanso entre blocos maiores. Uma ou duas vezes por página, não mais. */
+  .ornament {
+    text-align: center;
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    color: var(--gold);
+    letter-spacing: 0.6em;
+    opacity: 0.75;
+    user-select: none;
+  }
+
+  /*
+    O número em destaque de um índice.
+
+    Deliberadamente sem contagem crescente na entrada. A animação daria um
+    instante de espetáculo e custaria a premissa da ferramenta: um número que
+    se move enquanto é lido pede para ser sentido, não conferido. Aqui ele
+    aparece pronto e fica parado.
+  */
+  .value-hero {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+
+  /*
+    Sublinhado sempre presente, nunca só no hover: cor não pode ser o único
+    sinal de que algo é clicável.
+  */
+  .link {
+    color: var(--green-deep);
+    text-decoration: underline;
+    text-decoration-color: var(--green-light);
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+    transition: text-decoration-color 160ms ease;
+  }
+
+  .link:hover {
+    text-decoration-color: var(--green-deep);
+  }
+
+  /* --- Superfícies ------------------------------------------------------ */
+
+  .card {
+    background: var(--paper-deep);
+    border: 1px solid var(--line);
+    border-radius: 2px;
+  }
+
+  /* Barra fixa do topo. Fina, para não competir com o herói. */
+  .masthead {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    background: color-mix(in srgb, var(--paper) 92%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+  }
+
+  /* Bloco invertido: aqui o ouro finalmente vira texto legível (6.21:1). */
+  .inverted {
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  .inverted .eyebrow,
+  .inverted .eyebrow-plain {
+    color: var(--gold-soft);
+  }
+
+  .inverted .eyebrow::before {
+    background: var(--gold-soft);
+  }
+
+  .inverted .link {
+    color: var(--gold-soft);
+    text-decoration-color: var(--gold);
+  }
+
+  .inverted .link:hover {
+    text-decoration-color: var(--gold-soft);
+  }
+
+  /* --- Controles -------------------------------------------------------- */
+
+  /*
+    Slider. Usa <input type="range"> nativo: o comportamento de teclado (setas,
+    Home, End, PageUp/PageDown) e o suporte de leitor de tela vêm de graça, e
+    nenhuma reimplementação em div chega perto disso.
+  */
+  .slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 1.5rem;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .slider::-webkit-slider-runnable-track {
+    height: 2px;
+    background: var(--line);
+    border-radius: 1px;
+  }
+
+  .slider::-moz-range-track {
+    height: 2px;
+    background: var(--line);
+    border-radius: 1px;
+  }
+
+  .slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 1.125rem;
+    height: 1.125rem;
+    margin-top: -0.5rem;
+    border-radius: 50%;
+    background: var(--green);
+    border: 2px solid var(--paper);
+    box-shadow: 0 1px 3px rgba(26, 22, 18, 0.25);
+    transition: transform 140ms ease;
+  }
+
+  .slider::-moz-range-thumb {
+    width: 1.125rem;
+    height: 1.125rem;
+    border-radius: 50%;
+    background: var(--green);
+    border: 2px solid var(--paper);
+    box-shadow: 0 1px 3px rgba(26, 22, 18, 0.25);
+    transition: transform 140ms ease;
+  }
+
+  .slider:hover::-webkit-slider-thumb,
+  .slider:focus-visible::-webkit-slider-thumb {
+    transform: scale(1.15);
+  }
+
+  .slider:hover::-moz-range-thumb,
+  .slider:focus-visible::-moz-range-thumb {
+    transform: scale(1.15);
+  }
+
+  .slider:focus-visible {
+    outline-offset: 6px;
+  }
+
+  /* Campo de texto editorial: linha inferior, não caixa. */
+  .field {
+    width: 100%;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid var(--line);
+    padding: 0.5rem 0;
+    font-family: var(--font-body);
+    font-size: 1.0625rem;
+    color: var(--ink);
+    transition: border-color 180ms ease;
+  }
+
+  /*
+    Sem opacidade reduzida. O placeholder daqui não é enfeite — diz que o campo
+    aceita CEP, endereço ou nome de hospital, que é a única pista de como usá-lo.
+    A 70% media 2,89:1, abaixo do AA; em cor cheia, 5,23:1.
+  */
+  .field::placeholder {
+    color: var(--ink-mute);
+    opacity: 1;
+  }
+
+  .field:hover {
+    border-bottom-color: var(--green-light);
+  }
+
+  .field:focus {
+    outline: none;
+    border-bottom-color: var(--green);
+    border-bottom-width: 2px;
+    padding-bottom: calc(0.5rem - 1px);
+  }
+
+  .field:focus-visible {
+    outline: none;
+  }
+
+  /* O contorno de foco vai para o contêiner, que é o que a pessoa enxerga. */
+  .field-shell:has(.field:focus-visible) {
+    outline: 2.5px solid var(--green);
+    outline-offset: 4px;
+    border-radius: 2px;
+  }
+
+  /* Botão primário. */
+  .btn {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    background: var(--green-deep);
+    color: var(--paper);
+    padding: 1rem 2rem;
+    border: 1px solid var(--green-deep);
+    border-radius: 2px;
+    transition:
+      background-color 180ms ease,
+      transform 180ms ease;
+  }
+
+  .btn:hover:not(:disabled) {
+    background: var(--green);
+    transform: translateY(-1px);
+  }
+
+  .btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  .btn-quiet {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--green);
+    border-bottom: 1px solid var(--green-light);
+    padding-bottom: 1px;
+    transition: border-color 160ms ease;
+  }
+
+  .btn-quiet:hover {
+    border-bottom-color: var(--green);
+  }
+
+  /*
+    Escolha entre opções mutuamente exclusivas. Ver todas as alternativas de
+    uma vez importa aqui: "ônibus urbano" e "metrô" produzem contas muito
+    diferentes, e um <select> fechado esconde essa diferença atrás de um
+    clique.
+
+    Por dentro é um <input type="radio"> de verdade, visualmente oculto. Assim
+    a navegação por setas dentro do grupo, o agrupamento anunciado pelo leitor
+    de tela e o envio junto ao formulário vêm do navegador, não de código
+    nosso.
+  */
+  .chip {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 0.6rem 0.9rem;
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    color: var(--ink-soft);
+    background: transparent;
+    cursor: pointer;
+    transition:
+      border-color 160ms ease,
+      background-color 160ms ease,
+      color 160ms ease;
+  }
+
+  .chip input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .chip:hover {
+    border-color: var(--green-light);
+    background: var(--paper-deep);
+  }
+
+  .chip:has(input:checked) {
+    border-color: var(--green);
+    background: var(--green-wash);
+    color: var(--green-deep);
+    font-weight: 500;
+  }
+
+  /* Marca de seleção além da cor — daltonismo não pode custar a informação. */
+  .chip:has(input:checked)::before {
+    content: "▸";
+    margin-right: 0.45em;
+    color: var(--green);
+  }
+
+  .chip:has(input:focus-visible) {
+    outline: 2.5px solid var(--green);
+    outline-offset: 3px;
+  }
+
+  /* Caixa de seleção. */
+  .checkbox {
+    appearance: none;
+    width: 1.1rem;
+    height: 1.1rem;
+    flex-shrink: 0;
+    border: 1px solid var(--ink-mute);
+    border-radius: 2px;
+    background: transparent;
+    display: grid;
+    place-content: center;
+    cursor: pointer;
+    transition:
+      border-color 160ms ease,
+      background-color 160ms ease;
+  }
+
+  .checkbox:checked {
+    background: var(--green);
+    border-color: var(--green);
+  }
+
+  .checkbox:checked::after {
+    content: "";
+    width: 0.55rem;
+    height: 0.3rem;
+    border-left: 2px solid var(--paper);
+    border-bottom: 2px solid var(--paper);
+    transform: rotate(-45deg) translate(1px, -1px);
   }
 }
