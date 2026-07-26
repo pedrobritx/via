@@ -169,8 +169,74 @@ export const ptBR = {
   "control.of": "de",
   "control.pending": "aguardando os passos anteriores",
   "control.done": "concluído",
+  "control.decrease": "Diminuir",
+  "control.increase": "Aumentar",
 
   "footer.builtWith": "Método aberto, código aberto.",
+
+  // --- Atalhos da página inicial ---------------------------------------
+  "home.shortcuts.eyebrow": "Dois caminhos mais curtos",
+  "home.shortcuts.title.before": "Se você já sabe",
+  "home.shortcuts.title.emphasis": "o que quer",
+  "home.shortcuts.calc.title": "Calculadora rápida",
+  "home.shortcuts.calc.body":
+    "Quatro campos e o resultado. Cada conceito abre ali mesmo, se você quiser saber de onde vem o número.",
+  "home.shortcuts.study.title": "O estudo por trás",
+  "home.shortcuts.study.body":
+    "Fundamentação, método e limites, com bibliografia verificada e as contas que o VIA não sabe fazer.",
+
+  // --- Calculadora simplificada ----------------------------------------
+  "nav.calculator": "Calculadora rápida",
+  "calc.masthead": "Calculadora rápida",
+  "calc.eyebrow": "Cálculo direto",
+  "calc.title.before": "A conta inteira,",
+  "calc.title.emphasis": "em quatro campos",
+  "calc.lede":
+    "Mesmo cálculo do percurso completo, sem as explicações no caminho. Se quiser saber de onde sai cada número, os blocos abaixo abrem.",
+  "calc.submit": "Calcular",
+  "calc.result.eyebrow": "Deixando de ir, você poupa",
+  "calc.result.carbon": "de CO₂",
+  "calc.empty": "Preencha origem e destino para calcular.",
+  "calc.toFull": "Fazer o percurso guiado, passo a passo",
+  "calc.toStudy": "Ler o estudo que embasa o método",
+  "calc.toMethodology": "Ver todas as constantes e fontes",
+
+  "calc.how.title.before": "Como o VIA",
+  "calc.how.title.emphasis": "chega a esses números",
+  "calc.how.q1": "Por que ida e volta, sempre?",
+  "calc.how.a1":
+    "Porque o retorno é metade do custo e some da maioria das estimativas. Ninguém vai à consulta e fica por lá.",
+  "calc.how.q2": "De onde vêm os fatores de emissão?",
+  "calc.how.a2":
+    "Da base britânica do DESNZ, ajustada onde a frota e a matriz elétrica brasileiras divergem — nossa eletricidade é atipicamente limpa, o que derruba metrô e teleconsulta frente a fatores europeus.",
+  "calc.how.q3": "O tempo inclui o quê, exatamente?",
+  "calc.how.a3":
+    "Deslocamento, espera no ponto, procura de vaga, espera na unidade e a consulta. Em cenário urbano típico, o tempo parado supera o tempo em movimento.",
+  "calc.how.q4": "A idade muda o resultado como?",
+  "calc.how.a4":
+    "Ela entra no índice de impacto social, que mede o peso que a viagem impõe à pessoa — nunca a pessoa. Valor alto é argumento para remover a viagem, jamais para restringir o acesso de alguém.",
+  "calc.how.q5": "Esses números são medidos ou escolhidos?",
+  "calc.how.a5":
+    "Os dois, e a diferença fica declarada. Fatores de emissão, tarifas e tempos vêm de fonte publicada. Os pesos dos índices compostos de 0 a 100 são escolha do projeto, marcados como normativos em cada resultado.",
+
+  // --- O estudo ---------------------------------------------------------
+  "nav.study": "O estudo",
+  "study.masthead": "Documento de fundamentação",
+  "study.backHome": "Voltar ao início",
+  "study.eyebrow": "Estudo · Método aberto",
+  "study.version": "Versão",
+  "study.date": "Data",
+  "study.abstract": "Resumo",
+  "study.keywords": "Palavras-chave:",
+  "study.contents": "Sumário",
+  "study.notes": "Notas",
+  "study.references": "Referências",
+  "study.references.note":
+    "Cada entrada foi verificada no documento original — autoria, periódico, volume, ano e DOI vieram da própria página do artigo. A lista é mais curta do que um estudo do gênero costuma exibir; é o tamanho que dá para sustentar.",
+  "study.cta.before": "Agora veja a conta",
+  "study.cta.emphasis": "no seu caso",
+  "study.cta.calculator": "Abrir a calculadora",
+  "study.cta.methodology": "Ver todas as constantes",
 
   // --- Resultados ---
   "results.title": "Resultado",
