@@ -150,6 +150,13 @@ export function GuidedFlow({ locale = "pt-BR" }: { locale?: Locale }) {
   const set = <K extends keyof FormState>(key: K, value: FormState[K]) =>
     setForm((current) => ({ ...current, [key]: value }));
 
+  // Rótulos dos botões de passo. Compostos aqui, onde o tradutor existe: a
+  // primitiva de slider não conhece idioma nenhum, de propósito.
+  const passo = (rotulo: string) => ({
+    decreaseLabel: `${t("control.decrease")} — ${rotulo}`,
+    increaseLabel: `${t("control.increase")} — ${rotulo}`,
+  });
+
   const hasPlaces = form.origin !== null && form.destination !== null;
   const isDriven = DRIVEN.includes(form.modal);
   const isTransit = TRANSIT.includes(form.modal);
@@ -282,6 +289,7 @@ export function GuidedFlow({ locale = "pt-BR" }: { locale?: Locale }) {
                   min={1}
                   max={8}
                   display={`${form.occupancy} ${t("control.people")}`}
+                  {...passo(t("form.occupancy.label"))}
                   onChange={(v) => set("occupancy", v)}
                 />
               ) : null}
@@ -294,6 +302,7 @@ export function GuidedFlow({ locale = "pt-BR" }: { locale?: Locale }) {
                   min={0}
                   max={10}
                   display={`${form.transfers} ${t("control.transfersUnit")}`}
+                  {...passo(t("form.transfers.label"))}
                   onChange={(v) => set("transfers", v)}
                 />
               ) : null}
@@ -356,6 +365,7 @@ export function GuidedFlow({ locale = "pt-BR" }: { locale?: Locale }) {
             min={0}
             max={110}
             display={`${form.age} ${t("control.years")}`}
+            {...passo(t("form.age.label"))}
             onChange={(v) => set("age", v)}
           />
 

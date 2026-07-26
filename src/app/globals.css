@@ -613,6 +613,39 @@ body > * {
     outline-offset: 3px;
   }
 
+  /*
+    Botões de passo do slider. Alvo de 40 px — o mínimo confortável para o
+    polegar, e bem acima dos 24 px que a WCAG 2.2 exige em Target Size (Mínimo).
+  */
+  .step-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    flex-shrink: 0;
+    font-family: var(--font-mono);
+    font-size: 1.15rem;
+    line-height: 1;
+    color: var(--green-deep);
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    background: transparent;
+    transition:
+      border-color 160ms ease,
+      background-color 160ms ease;
+  }
+
+  .step-btn:hover:not(:disabled) {
+    border-color: var(--green);
+    background: var(--green-wash);
+  }
+
+  .step-btn:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+
   /* Caixa de seleção. */
   .checkbox {
     appearance: none;
@@ -642,5 +675,129 @@ body > * {
     border-left: 2px solid var(--paper);
     border-bottom: 2px solid var(--paper);
     transform: rotate(-45deg) translate(1px, -1px);
+  }
+
+  /* ======================================================================
+     O estudo — convenções ABNT adaptadas para tela
+     ======================================================================
+
+     A ABNT é norma de impresso: fala em centímetros de margem, corpo 12 e
+     entrelinha 1,5. O que se preserva aqui é a *relação* entre os elementos,
+     não a medida absoluta — citação longa recuada, menor e em espaço simples;
+     nota menor que o corpo; referências em espaço simples separadas por linha
+     em branco. A tipografia continua a do projeto por decisão explícita: a
+     norma prescreve tamanho, não família.
+     ====================================================================== */
+
+  /* Citação direta com mais de três linhas (NBR 10520:2023, 7.1.1):
+     recuo, corpo menor, espaço simples e SEM aspas. */
+  .bloco-citacao {
+    margin-left: min(4cm, 8%);
+    margin-block: 1.75rem;
+    padding-left: 1.25rem;
+    border-left: 2px solid var(--gold);
+    font-size: 0.94rem;
+    line-height: 1.4;
+    color: var(--ink-soft);
+  }
+
+  /* Chamada de nota: numeral sobrescrito. */
+  .nota-ref {
+    font-family: var(--font-mono);
+    font-size: 0.68em;
+    vertical-align: super;
+    line-height: 0;
+    color: var(--green);
+    padding-inline: 0.15em;
+    text-decoration: none;
+  }
+
+  .nota-ref:hover {
+    text-decoration: underline;
+  }
+
+  /* Nota de rodapé: menor que o corpo, espaço simples. */
+  .nota-rodape {
+    font-size: 0.9rem;
+    line-height: 1.42;
+    color: var(--ink-soft);
+  }
+
+  /* Entrada de referência: espaço simples, alinhada à esquerda. O título usa
+     negrito — UM recurso tipográfico, o mesmo em todas (NBR 6023:2025, 6). */
+  .referencia {
+    font-size: 0.94rem;
+    line-height: 1.4;
+  }
+
+  /* Termo definido no próprio texto. */
+  .termo {
+    border-bottom: 1px dotted var(--green-light);
+    color: var(--green-deep);
+    cursor: help;
+  }
+
+  /*
+    Destaque. Verde lavado, não amarelo de marca-texto: o amarelo grita e
+    brigaria com o ouro do sistema. A linha inferior garante que o realce não
+    dependa só da cor.
+  */
+  .destaque {
+    background: var(--green-wash);
+    box-shadow: inset 0 -1px 0 var(--green-light);
+    color: var(--green-deep);
+    padding: 0.08em 0.22em;
+    border-radius: 1px;
+  }
+
+  /* Sumário (NBR 6027): a hierarquia repete exatamente a do texto. */
+  .sumario a {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    padding-block: 0.34rem;
+    color: var(--ink-soft);
+    text-decoration: none;
+  }
+
+  .sumario a:hover {
+    color: var(--green-deep);
+  }
+
+  .sumario .indicativo {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--green);
+    flex-shrink: 0;
+    min-width: 2.7rem;
+  }
+
+  /* Linha pontilhada ligando título e destino, como num sumário impresso. */
+  .sumario .preenchimento {
+    flex: 1;
+    border-bottom: 1px dotted var(--line);
+    transform: translateY(-0.22em);
+  }
+
+  /* Cartão de chamada — leva a calculadora e ao estudo, fora do texto corrido. */
+  .cartao-acao {
+    display: flex;
+    gap: 1.25rem;
+    align-items: flex-start;
+    padding: 1.5rem;
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    background: var(--paper-deep);
+    text-decoration: none;
+    transition:
+      border-color 180ms ease,
+      background-color 180ms ease,
+      transform 180ms ease;
+  }
+
+  .cartao-acao:hover {
+    border-color: var(--green);
+    background: var(--green-wash);
+    transform: translateY(-2px);
   }
 }

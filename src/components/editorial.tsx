@@ -202,6 +202,8 @@ export function Slider({
   max,
   step = 1,
   display,
+  decreaseLabel,
+  increaseLabel,
   onChange,
 }: {
   label: string;
@@ -212,10 +214,15 @@ export function Slider({
   step?: number;
   /** Valor já formatado para leitura, com unidade. */
   display: string;
+  /** Rótulos acessíveis dos botões. Chegam prontos do catálogo. */
+  decreaseLabel: string;
+  increaseLabel: string;
   onChange: (value: number) => void;
 }) {
   const id = useId();
   const helpId = `${id}-help`;
+
+  const clamp = (next: number) => Math.min(max, Math.max(min, next));
 
   return (
     <div className="flex flex-col gap-2">
@@ -228,19 +235,43 @@ export function Slider({
         </output>
       </div>
 
-      <input
-        id={id}
-        type="range"
-        className="slider"
-        min={min}
-        max={max}
-        step={step}
-        value={value}
-        aria-describedby={help ? helpId : undefined}
-        onChange={(e) => onChange(Number(e.target.value))}
-      />
+      {/*
+        Os botões existem porque arrastar é a interação mais difícil de acertar
+        que a web tem: exige mira, mão firme e uma tela grande. Quem quer somar
+        um ano à idade não deveria precisar de nada disso. A trilha continua
+        ali para quem prefere varrer a faixa inteira de uma vez.
+      */}
+      <div className="flex items-center gap-3">
+        <StepButton
+          label={decreaseLabel}
+          disabled={value <= min}
+          onClick={() => onChange(clamp(value - step))}
+        >
+          −
+        </StepButton>
 
-      <div className="mono-label flex justify-between" aria-hidden="true">
+        <input
+          id={id}
+          type="range"
+          className="slider flex-1"
+          min={min}
+          max={max}
+          step={step}
+          value={value}
+          aria-describedby={help ? helpId : undefined}
+          onChange={(e) => onChange(Number(e.target.value))}
+        />
+
+        <StepButton
+          label={increaseLabel}
+          disabled={value >= max}
+          onClick={() => onChange(clamp(value + step))}
+        >
+          +
+        </StepButton>
+      </div>
+
+      <div className="mono-label flex justify-between px-11" aria-hidden="true">
         <span>{min}</span>
         <span>{max}</span>
       </div>
@@ -251,6 +282,30 @@ export function Slider({
         </p>
       ) : null}
     </div>
+  );
+}
+
+function StepButton({
+  label,
+  disabled,
+  onClick,
+  children,
+}: {
+  label: string;
+  disabled: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      className="step-btn"
+      aria-label={label}
+      disabled={disabled}
+      onClick={onClick}
+    >
+      <span aria-hidden="true">{children}</span>
+    </button>
   );
 }
 
