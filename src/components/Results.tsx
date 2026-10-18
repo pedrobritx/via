@@ -59,12 +59,14 @@ export function Results({
   scientistMode,
   onToggleScientist,
   locale,
+  stale = false,
   t,
 }: {
   result: ImpactResult;
   scientistMode: boolean;
   onToggleScientist: (value: boolean) => void;
   locale: Locale;
+  stale?: boolean;
   t: Translator;
 }) {
   const format = makeFormatter(locale);
@@ -216,7 +218,7 @@ export function Results({
         </section>
       ) : null}
 
-      <ExportButtons result={result} t={t} />
+      <ExportButtons result={result} t={t} locale={locale} stale={stale} />
     </div>
   );
 }
