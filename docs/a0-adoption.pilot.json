@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "project": "pedrobritx/via",
+  "governance": "polaris",
+  "disciplines": {
+    "axis": {
+      "enabled": true
+    },
+    "meridian": {
+      "enabled": true
+    },
+    "sentinel": {
+      "enabled": true
+    }
+  }
+}

@@ -462,6 +462,7 @@ export function GuidedFlow({ locale = "pt-BR" }: { locale?: Locale }) {
                 scientistMode={scientistMode}
                 onToggleScientist={setScientistMode}
                 locale={locale}
+                stale={stale}
                 t={t}
               />
             ) : null}

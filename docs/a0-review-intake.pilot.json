@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "id": "via-a0-copy-summary-review-001",
+  "objective": "Review the draft Copy summary implementation in VIA against its pre-registered privacy, accessibility, engineering and verification criteria. Do not claim the original implementation was produced by a Codex orchestration run.",
+  "context": [
+    "AGENTS.md",
+    "README.md",
+    "src/components/Results.tsx",
+    "src/components/ExportButtons.tsx",
+    "src/i18n/shareSummary.ts",
+    "docs/a0-copy-summary.md"
+  ],
+  "acceptance_criteria": [
+    "No raw patient input or locations in copied text",
+    "Relevant nonviability and methodological caveats present",
+    "Keyboard/copy success and error feedback are honest",
+    "Stale results cannot be copied",
+    "VIA test, typecheck, lint and build pass with actual logs"
+  ],
+  "signals": {
+    "implementation": true,
+    "architecture": false,
+    "interface": true,
+    "security": true,
+    "independent_workstreams": false,
+    "shared_interfaces": true,
+    "consequential": false
+  },
+  "host": {
+    "name": "codex",
+    "subagents": false,
+    "isolated_worktrees": false
+  }
+}
