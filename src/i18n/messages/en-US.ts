@@ -123,6 +123,15 @@ export const enUS: Partial<Messages> = {
   "scientist.dataTable": "Chart data table",
 
   "export.title": "Export",
+  "export.copySummary": "Copy summary",
+  "export.copySuccess": "Summary copied to clipboard.",
+  "export.copyFailure": "Could not copy the summary. Check clipboard permissions.",
+  "export.copyStale": "Recalculate before copying an updated summary.",
+  "export.copyPrivacy": "The summary omits addresses and personal profile details. Other apps may access copied text.",
+  "export.copyVersion": "Index version:",
+  "export.copyNotViable": "Note: teleconsultation is not viable here. The potential savings are hypothetical.",
+  "export.copyLowConfidence": "Route estimated with low precision.",
+  "export.copyCaveat": "Travel burden and social impact use normative weights, not field measurements.",
   "export.json": "Download JSON",
   "export.csv": "Download CSV",
 
