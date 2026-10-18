@@ -1,0 +1,99 @@
+name: Constellation A0 adopter preflight
+
+# Read-only, real-repository integration smoke check. Never runs an agent.
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/a0-preflight.yml"
+      - "docs/a0-*.json"
+      - "docs/a0-*.md"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  composition-preflight:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout VIA adopter
+        uses: actions/checkout@v4
+        with:
+          path: via
+          persist-credentials: false
+      - name: Checkout Polaris governance
+        uses: actions/checkout@v4
+        with:
+          repository: pedrobritx/polaris
+          ref: main
+          path: polaris
+          persist-credentials: false
+      - name: Checkout Axis engineering
+        uses: actions/checkout@v4
+        with:
+          repository: pedrobritx/axis
+          ref: main
+          path: axis
+          persist-credentials: false
+      - name: Checkout Meridian design
+        uses: actions/checkout@v4
+        with:
+          repository: pedrobritx/meridian
+          ref: main
+          path: meridian
+          persist-credentials: false
+      - name: Checkout Sentinel security
+        uses: actions/checkout@v4
+        with:
+          repository: pedrobritx/sentinel
+          ref: main
+          path: sentinel
+          persist-credentials: false
+      - name: Select Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run read-only A0 routing on real adopter checkouts
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 polaris/automation/a0.py route \
+            --config via/docs/a0-adoption.pilot.json \
+            --intake via/docs/a0-review-intake.pilot.json \
+            --workspace "$GITHUB_WORKSPACE" \
+            --product-root "$GITHUB_WORKSPACE/via" \
+            > "$RUNNER_TEMP/a0-plan.json"
+      - name: Assert exact composition without claiming execution
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          plan = json.loads((Path(os.environ["RUNNER_TEMP"]) / "a0-plan.json").read_text())
+          expected = {"axis", "meridian", "sentinel"}
+          assert plan["preflight_status"] == "ready", "Missing mandatory coverage"
+          assert plan["routing"]["mode"] == "unified", "Unexpected agent-count claim"
+          assert set(plan["routing"]["disciplines"]) == expected, "Wrong disciplines"
+          assert {task["discipline"] for task in plan["composition"]["tasks"]} == expected
+          assert all(task["status"] == "planned" and not task["evidence"]
+                     for task in plan["composition"]["tasks"]), "Plans cannot masquerade as execution"
+          assert not plan["product_source"]["dirty"], "Adopter checkout is not clean"
+          assert not plan["composition"]["coverage_gaps"]
+          for task in plan["composition"]["tasks"]:
+              assert not task["source"]["dirty"], "Discipline source is not clean"
+              assert len(task["source"]["revision"]) == 40
+          print("VIA + Polaris/Axis/Meridian/Sentinel composition: structurally ready")
+          print("Read-only preflight only: no implementation, tests or agent handoffs executed.")
+          PY
+      - name: Record scope in summary
+        shell: bash
+        run: |
+          {
+            echo "### Constellation A0 — Adopter preflight"
+            echo "Real VIA and capability checkouts were validated; Git revisions are recorded in this run."
+            echo "No coding agent, project feature implementation, accessibility inspection or security verification was performed by this workflow."
+            echo "A structurally valid plan is **not** an accepted end-to-end A0 pilot."
+          } >> "$GITHUB_STEP_SUMMARY"
