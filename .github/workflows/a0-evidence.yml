@@ -1,0 +1,83 @@
+name: Constellation A0 source-matched check evidence
+
+# Evidence capture of four fixed VIA checks, not an AI-host orchestration run.
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/a0-evidence.yml"
+      - "scripts/a0_capture_checks.py"
+      - "docs/a0-copy-summary.md"
+      - "docs/a0-codex-runbook.md"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  a0-check-evidence:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout VIA with Git provenance
+        uses: actions/checkout@v4
+        with:
+          path: via
+          persist-credentials: false
+      - name: Checkout pinned Polaris evidence validator
+        uses: actions/checkout@v4
+        with:
+          repository: pedrobritx/polaris
+          ref: ed10f82764685526ab69b66db7edab7a998fd0f9
+          path: polaris
+          persist-credentials: false
+      - name: Select Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Select Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: via/package-lock.json
+      - name: Install existing VIA dependencies (no extra services or credentials)
+        working-directory: via
+        run: npm ci
+      - name: Execute four approved VIA checks and audit local receipts
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/a0-evidence"
+          set +e
+          python3 via/scripts/a0_capture_checks.py \
+            --product-root "$GITHUB_WORKSPACE/via" \
+            --evidence-root "$RUNNER_TEMP/a0-evidence"
+          capture_exit=$?
+          set -e
+
+          # The validator checks local integrity, not agent execution.
+          python3 polaris/automation/a0.py check-result \
+            --result "$RUNNER_TEMP/a0-evidence/a0-result.json"
+          python3 polaris/automation/a0_evidence.py \
+            --result "$RUNNER_TEMP/a0-evidence/a0-result.json" \
+            --product-root "$GITHUB_WORKSPACE/via" \
+            --evidence-root "$RUNNER_TEMP/a0-evidence"
+
+          {
+            echo "### A0 — source-matched project check evidence"
+            echo "Four existing VIA project checks were executed directly in this GitHub Actions job."
+            echo "Each check produced a local receipt and SHA-256 digests of stdout/stderr."
+            echo "Polaris validated the reported schema and the check receipts against this clean Git checkout."
+            echo "**Not performed:** Codex agent orchestration, human accessibility review, privacy penetration testing, baseline experiment or acceptance."
+            echo "A0 execution/verification/approval statuses remain **partial / partial / pending**."
+          } >> "$GITHUB_STEP_SUMMARY"
+          exit "$capture_exit"
+      - name: Archive non-sensitive summary and receipts (no raw check logs)
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: a0-via-check-receipts
+          path: |
+            ${{ runner.temp }}/a0-evidence/a0-result.json
+            ${{ runner.temp }}/a0-evidence/receipts/*.json
+          if-no-files-found: warn
+          retention-days: 7
