@@ -325,7 +325,7 @@ export const ptBR = {
   "export.copySuccess": "Resumo copiado para a área de transferência.",
   "export.copyFailure": "Não foi possível copiar o resumo. Verifique as permissões da área de transferência.",
   "export.copyStale": "Recalcule para copiar um resumo atualizado.",
-  "export.copyPrivacy": "O resumo não inclui endereços nem dados pessoais do perfil. Outros aplicativos podem acessar o texto copiado.",
+  "export.copyPrivacy": "A cópia omite endereços e campos brutos do perfil, mas resultados derivados também podem ser sensíveis. Outros aplicativos podem ler a área de transferência.",
   "export.copyVersion": "Versão dos índices:",
   "export.copyNotViable": "Atenção: a teleconsulta não é viável neste cenário. A economia indicada é hipotética.",
   "export.copyLowConfidence": "Rota estimada com baixa precisão.",
